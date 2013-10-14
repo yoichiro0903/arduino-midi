@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script src="WebMIDIAPI.js"></script>
+<script>
+	var m=NULL;
+	var inputs=null;
+	var outputs=null;
+	var output=null;
+
+	function runTest()
+	{
+        navigator.requestMIDIAccess().then( success, failure );
+        alert("here");
+	}
+
+	function success(midiAccess)
+    {
+		alert("ok you can use MIDI");
+        m=midiAccess;
+		inputs=m.inputs();
+		outputs=m.outputs();
+	}
+
+	function failure(error)
+	{
+		alert( "NG MIDI error 1" );
+	}
+
+	function goSound(){
+
+        m=midiAccess;
+		inputs=m.inputs();
+		outputs=m.outputs();
+
+		if(outputs==null) alert("outputs=null");
+		alert("outputs" + outputs);
+		alert("inputs" + inputs);
+		output=outputs[0];
+		output.send([0x90,0x48, 0x7f]);
+		output.send([0x90,0x48, 0x00],window.performance.now()+1000.0 );}
+
+	function soundChange(parts){
+		var value=0;
+		if(outputs==null) alert( "outputs=null" );
+		if(output==null) output=outputs[0];
+		value = parts.options[parts.selectedIndex].value;
+		output.send( [0xC0, value] );
+	}
+
+</script>
+<br>
+<!--	------------------------------------------------------------------ -->
+<form name="tone select">
+<select name="tone select" onChange="soundChange(this);">
+<option value="0">Acoustic Grand Piano
+<option value="1">Bright Acoustic Piano
+<option value="2">Electoric Grand Piano
+<option value="3">Honky-tonk Piano
+<option value="4">Electoric Piano 1
+<option value="5">Electoric Piano 2
+<option value="6">Harpsichord
+<option value="7">Clavi
+<option value="8">Celesta
+<option value="9">Glockenspiel
+<option value="10">Music Box
+<option value="11">Vibraphone
+<option value="12">Marimba
+<option value="13">Xylophone
+<option value="14">Tubular Bells
+<option value="15">Dulcimer
+<option value="16">Drawbar Organ
+<option value="17">Percussive Organ
+<option value="18">Rock Organ
+<option value="19">Church Organ
+<option value="20">Reed Organ
+<option value="21">Accordion
+<option value="22">Harmonica
+<option value="23">Tango Accordion
+<option value="24">Acoustic Giutar (Nylon)
+<option value="25">Acoustic Giutar (Steel)
+<option value="26">Electoric Giutar (Jazz)
+<option value="27">Electoric Giutar (Clean)
+<option value="28">Electoric Giutar (Muted)
+<option value="29">Overdriven Guitar
+<option value="30">Distortion Guitar
+<option value="31">Guitar Harmonics
+<option value="32">Acoustic Bass
+<option value="33">Electoric Bass (Fingar)
+<option value="34">Electoric Bass (Pick)
+<option value="35">Fretless Bass
+<option value="36">Slap Bass 1
+<option value="37">Slap Bass 2
+<option value="38">Synth Bass 1
+<option value="39">Synth Bass 2
+<option value="40">Violin
+<option value="41">Viola
+<option value="42">Cello
+<option value="43">Contrabass
+<option value="44">Tremolo Strings
+<option value="45">Pizzicato Strings
+<option value="46">Orchestral Harp
+<option value="47">Timpani
+<option value="48">String Ensemble 1
+<option value="49">String Ensemble 2
+<option value="50">Synth Strings 1
+<option value="51">Synth Strings 2
+<option value="52">Choir Aahs
+<option value="53">Voice Oohs
+<option value="54">Synth Voice
+<option value="55">Orchestra Hit
+<option value="56">Trumpet
+<option value="57">Trombone
+<option value="58">Tuba
+<option value="59">Muted Trumpet
+<option value="60">French Horn
+<option value="61">Brass Section
+<option value="62">Synth Brass 1
+<option value="63">Synth Brass 2
+<option value="64">Soprano Sax
+<option value="65">Alto Sax
+<option value="66">Tenor Sax
+<option value="67">Baritone Sax
+<option value="68">Oboe
+<option value="69">English Horn
+<option value="70">Bassoon
+<option value="71">Clarinet
+<option value="72">Piccolo
+<option value="73">Flute
+<option value="74">Recorder
+<option value="75">Pan Flute
+<option value="76">Blown Bottle
+<option value="77">Shakuhach
+<option value="78">Whistle
+<option value="79">Ocarina
+<option value="80">Lead 1 (square)
+<option value="81">Lead 2 (Sawtooth)
+<option value="82">Lead 3 (Calliope)
+<option value="83">Lead 4 (Chiff)
+<option value="84">Lead 5 (Charang)
+<option value="85">Lead 6 (Voice)
+<option value="86">Lead 7 (Fifths)
+<option value="87">Lead 8 (Bass+Lead)
+<option value="88">Pad 1 (New age)
+<option value="89">Pad 2 (Warm)
+<option value="90">Pad 3 (Polysynth)
+<option value="91">Pad 4 (Choir)
+<option value="92">Pad 5 (Bowed)
+<option value="93">Pad 6 (Metallic)
+<option value="94">Pad 7 (Halo)
+<option value="95">Pad 8 (Sweep)
+<option value="96">FX 1 (Rain)
+<option value="97">FX 2 (Soundtrack)
+<option value="98">FX 3 (Crystal)
+<option value="99">FX 4 (Atmosphere)
+<option value="100">FX 5 (Brightness)
+<option value="101">FX 6 (Goblins)
+<option value="102">FX 7 (Echoes)
+<option value="103">FX 8 (Sci-Fi)
+<option value="104">Sitar
+<option value="105">Banjo
+<option value="106">Shamisen
+<option value="107">Koto
+<option value="108">Kalimba
+<option value="109">Bag Pipe
+<option value="110">Fiddle
+<option value="111">Shanai
+<option value="112">Tinkle Bell
+<option value="113">Agogo
+<option value="114">Steel Drums
+<option value="115">Woodblock
+<option value="116">Taiko Drum
+<option value="117">Melodic Tom
+<option value="118">Synth Drum
+<option value="119">Reverse Cymbal
+<option value="120">Guitar Fret Noise
+<option value="121">Breath Noise
+<option value="122">Seashore
+<option value="123">Bird Tweet
+<option value="124">Telephone Ring
+<option value="125">Helicopter
+<option value="126">Applause
+<option value="127">Gunshot
+</select>
+</form>
+<!--	------------------------------------------------------------------ -->
+<br><br>
+<button onclick="runTest();">Test</button>
+<button onclick="goSound(0x4A)">Re</button>
+<button onclick="goSound(0x4C)">Mi</button>
+<button onclick="goSound(0x4D)">Fa</button>
+<button onclick="goSound(0x4F)">So</button>
+<button onclick="goSound(0x51)">Ra</button>
+<button onclick="goSound(0x53)">Si</button>
+<button onclick="goSound(0x54)">Do</button>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<html>
+<head>
+<link rel="stylesheet" href="main.css" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script src="WebMIDIAPI.js"></script>
+<script>
+
+
+	var m=NULL;
+	var inputs=null;
+	var outputs=null;
+	var output=null;
+
+	function runTest()
+	{
+		navigator.requestMIDIAccess().then( success, failure );
+	}
+
+	function success(midiAccess)
+	{
+		m=midiAccess;
+		inputs=m.inputs();
+		outputs=m.outputs();
+	}
+
+	function failure(error)
+	{
+		alert( "NG MIDI が使えません！" )
+	}
+
+	function goSound(value){
+		if(outputs==null) alert("no use of NG MIDI");
+		output=outputs[0];
+		output.send([0x90, value, 0x7f]);
+		output.send([0x90, value, 0x00],window.performance.now()+1000.0 );}
+</script>
+
+<script>
+$(function(){
+ var socket = io.connect();
+
+ socket.on('news_event', function (data) {
+    console.log();
+    $("#para_1").text(data["name"]);
+  });
+
+ $("#messageForm").submit(function(){
+        socket.emit("message", {content: $("#msg").val()});
+        return false;
+    });
+
+ $("#ledButtonOn").click(function(){
+//  $("#para_2").append('<p>' + "ok" + '</p>');
+        socket.emit("ledon", {switch : "1"});
+    });
+ $("#ledButtonOff").click(function(){
+        socket.emit("ledoff", {switch : "2"});
+    });
+    
+ socket.on('message_receive', function(data){
+  $("#para_1").append('<p>'+ data["maintext"] +'</p>');
+ });
+ 
+ //arduinoからのledに関するデータ（シリアル経由）
+ socket.on('one', function(data){
+  $("#para_2").append('<p>' + "ok" + '</p>');
+ });
+
+ socket.on('two', function(data){
+  $("#para_2").append('<p>' + data["led"] + '</p>');
+ });
+
+ socket.on('three', function(data){
+  $("#para_2").append('<p>' + data["led"] + '</p>');
+ });
+ 
+});
+
+</script> 
+
+
+</head>
+<body>
+	MIDIが使えるかどうかテストする。<br>
+<br>
+<button onclick="runTest();">Test MIDI!</button>
+<br><br>
+<button onclick="goSound(0x48)">Do</button>
+<button onclick="goSound(0x4A)">Re</button>
+<button onclick="goSound(0x4C)">Mi</button>
+<button onclick="goSound(0x4D)">Fa</button>
+<button onclick="goSound(0x4F)">So</button>
+<button onclick="goSound(0x51)">Ra</button>
+<button onclick="goSound(0x53)">Si</button>
+<button onclick="goSound(0x54)">Do</button>
+
+<p id="para_1">
+here is para_1
+</p>
+    <form id="messageForm">
+        <input id="msg" type="text">
+        <input type="submit" value="submit">
+    </form>
+    
+<p id="para_2">
+here is para_2
+</p>
+<input type="button" value="led on" id="ledButtonOn">
+<input type="button" value="led off" id="ledButtonOff">
+
+</body>
+</html>
