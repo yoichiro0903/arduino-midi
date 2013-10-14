@@ -11,6 +11,15 @@ app.get("/",function(req,res){
 	res.sendfile(__dirname + '/test.html');
     });
 //app.listen(3333);
+//midi 
+var midi = require('midi'),
+    midiOut = new midi.output();
+
+try {
+  midiOut.openPort(0);
+} catch(error) {
+  midiOut.openVirtualPort('');
+}
 
 // Serial Port code
 var portName = '/dev/tty.usbmodemfa131'; //arduinoのポート
