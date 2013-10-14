@@ -15,7 +15,6 @@ try {
 
 
 var routes = require('./routes');
-
 var http = require('http');
 var path = require('path');
 app.set('port', process.env.PORT || 3000);
@@ -32,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', routes.index);
 
 
+/*
 // Serial Port code
 var portName = '/dev/tty.usbmodemfa131'; 
 var sp = new serialport.SerialPort(portName, {
@@ -85,4 +85,5 @@ socket.on('ledoff',function(data){
 
 
 });
+*/
 
